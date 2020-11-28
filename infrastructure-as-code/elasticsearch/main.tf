@@ -15,7 +15,7 @@ module "elasticsearch" {
   elasticsearch_version   = "6.5"
   instance_type           = "t3a.large.elasticsearch"
   instance_count          = 4
-  ebs_volume_size         = 1024
+  ebs_volume_size         = 2048
   iam_role_arns           = ["arn:aws:iam::XXXXXXXXX:role/ops", "arn:aws:iam::XXXXXXXXX:role/dev"]
   iam_actions             = ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"]
   encrypt_at_rest_enabled = "true"
