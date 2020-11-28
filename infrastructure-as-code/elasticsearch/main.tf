@@ -1,19 +1,27 @@
-variable "aws_region" {
-  description = "AWS region"
-  default = "us-west-1"
+provider "aws" {
+  region = "us-east-2"
 }
 
-variable "ami_id" {
-  description = "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image"
-  default = "ami-2e1ef954"
-}
+module "elasticsearch" {
+  source                  = "../../"
+  namespace               = "eg"
+  stage                   = "dev"
+  name                    = "es"
+  dns_zone_id             = "Z14EN2YD427LRQ"
+  security_groups         = ["sg-XXXXXXXXX", "sg-YYYYYYYY"]
+  vpc_id                  = "vpc-XXXXXXXXX"
+  subnet_ids              = ["subnet-XXXXXXXXX", "subnet-YYYYYYYY"]
+  zone_awareness_enabled  = "true"
+  elasticsearch_version   = "6.5"
+  instance_type           = "t3a.large.elasticsearch"
+  instance_count          = 4
+  ebs_volume_size         = 1024
+  iam_role_arns           = ["arn:aws:iam::XXXXXXXXX:role/ops", "arn:aws:iam::XXXXXXXXX:role/dev"]
+  iam_actions             = ["es:ESHttpGet", "es:ESHttpPut", "es:ESHttpPost"]
+  encrypt_at_rest_enabled = "true"
+  kibana_subdomain_name   = "kibana-es"
 
-variable "instance_type" {
-  description = "type of EC2 instance to provision."
-  default = "t3a.medium"
-}
-
-variable "name" {
-  description = "name to pass to Name tag"
-  default = "Provisioned by Terraform"
+  advanced_options = {
+    "rest.action.multi.allow_explicit_index" = "true"
+  }
 }
